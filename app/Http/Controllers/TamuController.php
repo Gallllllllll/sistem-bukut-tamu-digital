@@ -8,6 +8,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TamuExport;
 use PDF;
 
+
+
 class TamuController extends Controller
 {
     // Menampilkan daftar tamu + pencarian
@@ -69,4 +71,5 @@ class TamuController extends Controller
         $pdf = PDF::loadView('tamus.pdf', compact('tamus'));
         return $pdf->download('tamu.pdf');
     }
+    
 }
