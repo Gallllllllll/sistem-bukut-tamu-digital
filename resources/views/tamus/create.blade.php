@@ -1,24 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
     <title>Tambah Tamu Baru</title>
-    <style>
-        input { padding: 5px; margin-bottom: 10px; display: block; width: 300px; }
-        button { padding: 5px 10px; }
-        a { display: inline-block; margin-top: 10px; }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<h1>Tambah Tamu Baru</h1>
+<body class="bg-light">
 
-<form method="POST" action="{{ route('tamus.store') }}">
-    @csrf
-    <input type="text" name="nama" placeholder="Nama" required>
-    <input type="text" name="instansi" placeholder="Instansi" required>
-    <input type="text" name="tujuan" placeholder="Tujuan" required>
-    <button type="submit">Simpan Tamu</button>
-</form>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
 
-<a href="{{ route('tamus.index') }}">Kembali ke Daftar Tamu</a>
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">➕ Tambah Tamu Baru</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('tamus.store') }}" method="POST">
+                        @csrf
+                        
+                        <div class="mb-3">
+                            <label for="nama" class="form-label">Nama</label>
+                            <input type="text" name="nama" id="nama" class="form-control" placeholder="Masukkan nama" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="instansi" class="form-label">Instansi</label>
+                            <input type="text" name="instansi" id="instansi" class="form-control" placeholder="Masukkan instansi" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tujuan" class="form-label">Tujuan</label>
+                            <input type="text" name="tujuan" id="tujuan" class="form-control" placeholder="Tujuan kedatangan" required>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ route('tamus.index') }}" class="btn btn-secondary">⬅️ Kembali</a>
+                            <button type="submit" class="btn btn-primary">💾 Simpan Tamu</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
