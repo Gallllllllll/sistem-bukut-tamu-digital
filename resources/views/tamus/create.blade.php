@@ -16,6 +16,14 @@
                     <h4 class="mb-0">➕ Tambah Tamu Baru</h4>
                 </div>
                 <div class="card-body">
+
+
+                @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+                  @endif
+
                     <form action="{{ route('tamus.store') }}" method="POST">
                         @csrf
                         
@@ -44,7 +52,7 @@
                         </div>
 
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('tamus.index') }}" class="btn btn-secondary">⬅️ Kembali</a>
+                            {{-- <a href="{{ route('tamus.index') }}" class="btn btn-secondary">⬅️ Kembali</a> --}}
                             <button type="submit" class="btn btn-primary">💾 Simpan Tamu</button>
                         </div>
                     </form>

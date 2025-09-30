@@ -44,9 +44,11 @@ class TamuController extends Controller
             'waktu_kedatangan'=>'nullable|date',
         ]);
 
-        Tamu::create($request->except('_token'));
-        return redirect()->route('tamus.index')->with('success', 'Tamu baru sudah masuk!');
+        // Tamu::create($request->except('_token'));
+        // return redirect()->route('tamus.index')->with('success', 'Tamu baru sudah masuk!');
+         return back()->with('success', 'Tamu baru sudah masuk!');
     }
+
 
     // Statistik jumlah tamu per hari
     public function statistik()

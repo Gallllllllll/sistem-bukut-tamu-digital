@@ -16,3 +16,5 @@ Route::get('/tamus/statistik', [TamuController::class,'statistik'])->name('tamus
 
 
 
+
+
