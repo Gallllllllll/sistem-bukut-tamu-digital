@@ -14,3 +14,5 @@ Route::get('/tamus/export-pdf', [TamuController::class,'exportPDF'])->name('tamu
 Route::get('/tamus/statistik', [TamuController::class,'statistik'])->name('tamus.statistik');
 
 
+
+

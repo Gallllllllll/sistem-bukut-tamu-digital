@@ -31,7 +31,16 @@
 
                         <div class="mb-3">
                             <label for="tujuan" class="form-label">Tujuan</label>
-                            <input type="text" name="tujuan" id="tujuan" class="form-control" placeholder="Tujuan kedatangan" required>
+                            <select name="tujuan" id="tujuan" class="form-select" required>
+                                <option value="">-- Pilih Tujuan --</option>
+                                <option value="Membaca">Membaca</option>
+                                <option value="Meminjam Buku">Meminjam Buku</option>
+                                <option value="Mengembalikan Buku">Mengembalikan Buku</option>
+                                <option value="Mencari Referensi">Mencari Referensi</option>
+                                <option value="Diskusi/Belajar Kelompok">Diskusi / Belajar Kelompok</option>
+                                <option value="Menggunakan Fasilitas (Komputer/Internet)">Menggunakan Fasilitas (Komputer/Internet)</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
                         </div>
 
                         <div class="d-flex justify-content-between">
