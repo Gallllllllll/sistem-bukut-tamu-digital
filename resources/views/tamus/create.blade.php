@@ -24,6 +24,17 @@
                 </div>
                   @endif
 
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                </div>
+                @endif
+
+
                     <form action="{{ route('tamus.store') }}" method="POST">
                         @csrf
                         
@@ -64,5 +75,18 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Hilangkan pesan sukses otomatis
+    setTimeout(() => {
+        const alert = document.querySelector('.alert-success');
+        if (alert) alert.remove();
+    }, 3000);
+
+    // Bersihkan form setelah sukses submit
+    @if(session('success'))
+        document.querySelector('form').reset();
+    @endif
+</script>
+
 </body>
 </html>

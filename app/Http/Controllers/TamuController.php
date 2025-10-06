@@ -14,19 +14,24 @@ class TamuController extends Controller
 {
     // Menampilkan daftar tamu + pencarian
     public function index(Request $request)
-    {
-        $query = Tamu::query();
+{
+    // Ambil query dari form pencarian (input name="search")
+    $query = Tamu::query();
 
-        if ($request->has('search')) {
-            $s = $request->search;
-            $query->where('nama','like',"%$s%")
-                  ->orWhere('instansi','like',"%$s%")
-                  ->orWhereDate('waktu_kedatangan', $s);
-        }
-
-        $tamus = $query->orderBy('waktu_kedatangan','desc')->get();
-        return view('tamus.index', compact('tamus'));
+    if ($request->has('search') && !empty($request->search)) {
+        $s = $request->search;
+        $query->where('nama', 'like', "%$s%")
+              ->orWhere('instansi', 'like', "%$s%")
+              ->orWhereDate('waktu_kedatangan', $s);
     }
+
+    // Urutkan berdasarkan waktu kedatangan terbaru
+    $tamus = $query->orderBy('waktu_kedatangan', 'desc')->get();
+
+    // Kirim ke view
+    return view('tamus.index', compact('tamus'));
+}
+
 
     // Form tambah tamu
     public function create()
@@ -38,16 +43,26 @@ class TamuController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama'=>'required|string',
-            'instansi'=>'required|string',
-            'tujuan'=>'required|string',
-            'waktu_kedatangan'=>'nullable|date',
+            'nama' => 'required|string',
+            'instansi' => 'required|string',
+            'tujuan' => 'required|string',
+            'waktu_kedatangan' => 'nullable|date',
         ]);
 
-        // Tamu::create($request->except('_token'));
-        // return redirect()->route('tamus.index')->with('success', 'Tamu baru sudah masuk!');
-         return back()->with('success', 'Tamu baru sudah masuk!');
+        // Simpan data tamu baru ke database
+        Tamu::create([
+            'nama' => $request->nama,
+            'instansi' => $request->instansi,
+            'tujuan' => $request->tujuan,
+            'waktu_kedatangan' => $request->waktu_kedatangan ?? now(),
+        ]);
+
+        // Tetap di halaman tambah tamu dan tampilkan pesan sukses
+        return back()->with('success', 'Terima kasih, data tamu berhasil dikirim!');
     }
+
+
+
 
 
     // Statistik jumlah tamu per hari

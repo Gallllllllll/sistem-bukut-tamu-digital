@@ -4,7 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TamuController;
 
 
-Route::get('/', [TamuController::class,'index'])->name('tamus.index');
+Route::get('/', function () {
+    return redirect()->route('tamus.create'); // atau 'tamus.index'
+});
+
+Route::get('/tamus', [TamuController::class,'index'])->name('tamus.index');
 Route::get('/tamus/create', [TamuController::class, 'create'])->name('tamus.create');
 Route::post('/tamus', [TamuController::class, 'store'])->name('tamus.store');
 
