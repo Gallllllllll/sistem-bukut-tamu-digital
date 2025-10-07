@@ -49,16 +49,10 @@ class TamuController extends Controller
             'waktu_kedatangan' => 'nullable|date',
         ]);
 
-        // Simpan data tamu baru ke database
-        Tamu::create([
-            'nama' => $request->nama,
-            'instansi' => $request->instansi,
-            'tujuan' => $request->tujuan,
-            'waktu_kedatangan' => $request->waktu_kedatangan ?? now(),
-        ]);
 
-        // Tetap di halaman tambah tamu dan tampilkan pesan sukses
-        return back()->with('success', 'Terima kasih, data tamu berhasil dikirim!');
+        Tamu::create($request->except('_token'));
+        // return redirect()->route('tamus.index')->with('success', 'Tamu baru sudah masuk!');
+         return back()->with('success', 'Tamu baru sudah masuk!');
     }
 
 
