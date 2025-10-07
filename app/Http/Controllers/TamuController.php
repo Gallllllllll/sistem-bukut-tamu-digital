@@ -44,7 +44,7 @@ class TamuController extends Controller
             'waktu_kedatangan'=>'nullable|date',
         ]);
 
-        // Tamu::create($request->except('_token'));
+        Tamu::create($request->except('_token'));
         // return redirect()->route('tamus.index')->with('success', 'Tamu baru sudah masuk!');
          return back()->with('success', 'Tamu baru sudah masuk!');
     }

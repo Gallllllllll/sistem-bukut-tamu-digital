@@ -15,9 +15,10 @@ return new class extends Migration
             $table->string('tujuan');
             $table->timestamp('waktu_kedatangan')->useCurrent();
             $table->timestamps();
-        })
-        ->charset('utf8mb4')
-        ->collation('utf8mb4_unicode_ci');
+            $table->charset='utf8mb4';
+            $table->collation='utf8mb4_unicode_ci';
+        });
+        
     }
 
     public function down(): void
