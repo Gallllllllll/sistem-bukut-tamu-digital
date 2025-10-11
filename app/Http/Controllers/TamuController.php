@@ -55,6 +55,16 @@ class TamuController extends Controller
          return back()->with('success', 'Tamu baru sudah masuk!');
     }
 
+    //Hapus data tamu
+    public function destroy($id)
+    {
+        $tamu = \App\Models\Tamu::findOrFail($id);
+        $tamu->delete();
+
+        return redirect()->route('tamus.index')->with('success', 'Data tamu berhasil dihapus!');
+    }
+
+
 
 
 

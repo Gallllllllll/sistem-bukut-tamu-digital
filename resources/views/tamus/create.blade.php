@@ -11,6 +11,20 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
 
+            <!-- 🔐 Tombol Login Administrator -->
+            <div class="text-end mb-3">
+                @guest
+                    <a href="{{ route('login') }}" class="btn btn-outline-primary">
+                        🔐 Login Administrator
+                    </a>
+                @else
+                    <a href="{{ url('/logout') }}" class="btn btn-danger">
+                        🚪 Logout
+                    </a>
+                @endguest
+            </div>
+
+
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
                     <h4 class="mb-0">➕ Tambah Tamu Baru</h4>
@@ -18,11 +32,14 @@
                 <div class="card-body">
 
 
+
                 @if(session('success'))
-                <div class="alert alert-success">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                  @endif
+                @endif
+
 
                 @if ($errors->any())
                 <div class="alert alert-danger">

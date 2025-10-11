@@ -11,6 +11,15 @@
 <div class="container py-5">
     <h1 class="mb-4 text-center">📖 Daftar Tamu</h1>
 
+    {{-- tombol logout --}}
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{{ url('/logout') }}" class="btn btn-danger">
+            🚪 Logout
+        </a>
+    </div>
+
+
+
     {{-- tombol aksi --}}
     <div class="mb-3 d-flex flex-wrap gap-2">
         <a href="{{ route('tamus.create') }}" class="btn btn-primary">➕ Tambah Tamu Baru</a>
@@ -39,28 +48,34 @@
     {{-- tabel tamu --}}
     <div class="card shadow-sm">
         <div class="card-body p-0">
-            <table class="table table-striped table-hover mb-0">
+            <table class="table table-striped">
                 <thead class="table-dark">
                     <tr>
+                        <th>No</th>
                         <th>Nama</th>
                         <th>Instansi</th>
                         <th>Tujuan</th>
-                        <th>Waktu Kedatangan</th>
+                        <th>Tanggal</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($tamus as $tamu)
-                        <tr>
-                            <td>{{ $tamu->nama }}</td>
-                            <td>{{ $tamu->instansi }}</td>
-                            <td>{{ $tamu->tujuan }}</td>
-                            <td>{{ $tamu->waktu_kedatangan }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="text-center text-muted">Belum ada data tamu.</td>
-                        </tr>
-                    @endforelse
+                    @foreach($tamus as $index => $tamu)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $tamu->nama }}</td>
+                        <td>{{ $tamu->instansi }}</td>
+                        <td>{{ $tamu->tujuan }}</td>
+                        <td>{{ $tamu->created_at->format('d M Y H:i') }}</td>
+                        <td>
+                            <form action="{{ route('tamus.destroy', $tamu->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger">🗑️ Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

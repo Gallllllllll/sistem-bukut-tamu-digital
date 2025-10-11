@@ -33,7 +33,13 @@ class AuthController extends Controller
 
     public function logout()
     {
-        Auth::logout();
-        return redirect('/login');
+        \Illuminate\Support\Facades\Auth::logout();
+
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+
+        return redirect('/')->with('success', 'Anda telah logout.');
     }
+
+
 }
