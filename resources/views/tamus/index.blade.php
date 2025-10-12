@@ -7,16 +7,25 @@
     <style>
         body {
             background-color: #f8f9fa;
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            overflow-x: hidden;
         }
+
+        /* ===== SIDEBAR ===== */
         .sidebar {
             height: 100vh;
-            background-color: #8b0000; /* merah tua elegan */
+            background-color: #8b0000;
             color: white;
-            padding-top: 20px;
+            padding-top: 80px;
             position: fixed;
+            top: 0;
+            left: 0;
             width: 230px;
-            z-index: 1000;
+            z-index: 2000;
+            transition: transform 0.3s ease;
         }
+
         .sidebar a {
             color: white;
             display: block;
@@ -24,94 +33,110 @@
             text-decoration: none;
             font-weight: 500;
         }
+
         .sidebar a:hover, .sidebar a.active {
             background-color: #a52a2a;
             border-radius: 8px;
         }
-        .main-content {
-            margin-left: 240px;
-            padding: 20px;
+
+        .sidebar.hidden {
+            transform: translateX(-230px);
         }
+
+        /* ===== OVERLAY ===== */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1500;
+            display: none;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        /* ===== TOPBAR ===== */
         .navbar-custom {
             background-color: white;
             border-bottom: 1px solid #ddd;
             padding: 10px 20px;
-            position: sticky;
-            z-index: 1050;
+            position: fixed;
             top: 0;
+            width: 100%;
+            z-index: 2500;
+            display: flex;
+            align-items: center;
         }
+
         .navbar-custom h4 {
             margin: 0;
             font-weight: 600;
+            flex-grow: 1;
         }
 
+        .toggle-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #8b0000;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            margin-left: 240px;
+            padding: 80px 20px 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.full {
+            margin-left: 0;
+        }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 992px) {
             .sidebar {
-                width: 100%;
-                height: auto;
-                position: sticky;
+                transform: translateX(-230px);
+                position: fixed;
+                width: 230px;
                 top: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                background-color: #8b0000;
-                flex-wrap: wrap;
-                gap: 10px;
-                padding: 10px;
-                z-index: 1050;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+                left: 0;
             }
-            .sidebar h4 {
-                display: none;
+
+            .sidebar.show {
+                transform: translateX(0);
             }
-            .sidebar a {
-                display: inline-block;
-                padding: 8px 15px;
-                border-radius: 6px;
-                background-color: #a52a2a;
-                font-size: 0.9rem;
-            }
+
             .main-content {
                 margin-left: 0;
-                margin-top: 10px;
-                padding: 15px;
-            }
-            .navbar-custom {
-                position: sticky; 
-                top: 60px;
-                z-index: 1010;
-                flex-direction: column;
-                align-items: flex-start !important;
-                gap: 8px;
-            }
-            .table {
-                font-size: 0.9rem;
-            }
-            .card {
-                overflow-x: auto;
             }
         }
     </style>
 </head>
 <body>
 
-    {{-- Sidebar --}}
-    <div class="sidebar">
-        <div class="text-center mb-4">
-            <h4 class="fw-bold">📚 E-Library</h4>
-        </div>
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Navbar -->
+    <div class="navbar-custom">
+        <button class="toggle-btn" id="toggleBtn">☰</button>
+        <h4 class="fw-bold text-danger">📚 E-Library</h4>
+        <h4 class="center flex-grow-1 fw-bold">📖 Daftar Tamu</h4>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
         <a href="{{ route('tamus.index') }}" class="active">📖 Daftar Tamu</a>
         <a href="{{ route('tamus.statistik') }}">📊 Statistik</a>
         <a href="{{ url('/logout') }}">🚪 Logout</a>
     </div>
+    
 
-    {{-- Main Content --}}
-    <div class="main-content">
-        {{-- Navbar --}}
-        <div class="navbar-custom d-flex justify-content-between align-items-center mb-4">
-            <h4>📖 Daftar Tamu</h4>
-        </div>
-
+    <!-- Main Content -->
+    <div class="main-content" id="main">
         {{-- Tombol aksi --}}
         <div class="mb-3 d-flex flex-wrap gap-2">
             <a href="{{ route('tamus.create') }}" class="btn btn-primary">➕ Tambah Tamu Baru</a>
@@ -122,8 +147,8 @@
         {{-- Form pencarian --}}
         <form method="GET" action="{{ route('tamus.index') }}" class="mb-4">
             <div class="input-group">
-                <input type="text" name="search" class="form-control" 
-                       placeholder="Cari nama / instansi / tanggal" 
+                <input type="text" name="search" class="form-control"
+                       placeholder="Cari nama / instansi / tanggal"
                        value="{{ request('search') }}">
                 <button class="btn btn-outline-secondary" type="submit">Cari</button>
             </div>
@@ -171,6 +196,32 @@
         </div>
     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const toggleBtn = document.getElementById('toggleBtn');
+        const sidebar = document.getElementById('sidebar');
+        const main = document.getElementById('main');
+        const overlay = document.getElementById('overlay');
+
+        toggleBtn.addEventListener('click', () => {
+            if (window.innerWidth > 992) {
+                // Desktop mode
+                sidebar.classList.toggle('hidden');
+                main.classList.toggle('full');
+            } else {
+                // Mobile mode
+                sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
+            }
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+        });
+
+        // Tidak auto buka/tutup saat resize
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -8,17 +8,25 @@
     <style>
         body {
             background-color: #f8f9fa;
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            overflow-x: hidden;
         }
 
-        /* Sidebar */
+        /* ===== SIDEBAR ===== */
         .sidebar {
             height: 100vh;
             background-color: #8b0000;
             color: white;
-            padding-top: 20px;
+            padding-top: 80px;
             position: fixed;
+            top: 0;
+            left: 0;
             width: 230px;
+            z-index: 2000;
+            transition: transform 0.3s ease;
         }
+
         .sidebar a {
             color: white;
             display: block;
@@ -26,125 +34,123 @@
             text-decoration: none;
             font-weight: 500;
         }
+
         .sidebar a:hover, .sidebar a.active {
             background-color: #a52a2a;
             border-radius: 8px;
         }
 
-        .content {
-            margin-left: 240px;
-            padding: 30px;
+        .sidebar.hidden {
+            transform: translateX(-230px);
         }
 
-        /* Tab style */
-        .nav-tabs {
-            border-bottom: 2px solid #dee2e6;
+        /* ===== OVERLAY ===== */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1500;
+            display: none;
         }
-        .nav-tabs .nav-link {
-            border: none;
-            color: #555;
-            font-weight: 500;
-        }
-        .nav-tabs .nav-link.active {
-            border-bottom: 3px solid #0d6efd;
-            color: #0d6efd;
-            font-weight: 600;
+        .overlay.show {
+            display: block;
         }
 
-        canvas {
-        max-height: 300px !important;
-        }
-
+        /* ===== TOPBAR ===== */
         .navbar-custom {
             background-color: white;
             border-bottom: 1px solid #ddd;
             padding: 10px 20px;
-            position: sticky;
-            z-index: 1050;
+            position: fixed;
             top: 0;
+            width: 100%;
+            z-index: 2500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
+
         .navbar-custom h4 {
             margin: 0;
             font-weight: 600;
         }
 
+        .toggle-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #8b0000;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .content {
+            margin-left: 240px;
+            padding: 100px 20px 40px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .content.full {
+            margin-left: 0;
+        }
+
+        /* ===== CHART AREA ===== */
+        .chart-keseluruhan {
+            height: 500px; /* lebih besar dari biasanya */
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 992px) {
             .sidebar {
-                width: 100%;
-                height: auto;
-                position: sticky;
+                transform: translateX(-230px);
+                position: fixed;
+                width: 230px;
                 top: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                background-color: #8b0000;
-                flex-wrap: wrap;
-                gap: 10px;
-                padding: 10px;
-                z-index: 1050;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+                left: 0;
             }
 
-            .sidebar h4 {
-                display: none;
-            }
-
-            .sidebar a {
-                display: inline-block;
-                padding: 8px 15px;
-                border-radius: 6px;
-                background-color: #a52a2a;
-                font-size: 0.9rem;
-            }
-
-            .navbar-custom {
-                position: sticky; 
-                top: 60px;
-                z-index: 1010;
-                flex-direction: column;
-                align-items: flex-start !important;
-                gap: 8px;
+            .sidebar.show {
+                transform: translateX(0);
             }
 
             .content {
-                margin: 0 auto;          
-                padding: 20px;
-                max-width: 600px;        
-                text-align: center;       
+                margin-left: 0;
+                padding: 80px 20px;
             }
 
-            .card {
-                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-                border-radius: 12px;
-            }
-
-            canvas {
-                max-width: 100% !important;
-                height: auto !important;
+            .chart-keseluruhan {
+                height: 350px;
             }
         }
-
     </style>
 </head>
 <body>
 
-    {{-- Sidebar --}}
-    <div class="sidebar">
-        <div class="text-center mb-4">
-            <h4 class="fw-bold">📚 E-Library</h4>
-        </div>
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Navbar -->
+    <div class="navbar-custom">
+        <button class="toggle-btn" id="toggleBtn">☰</button>
+        <h4 class="fw-bold text-danger">📚 E-Library</h4>
+        <h4 class="m-0 text-center flex-grow-1 fw-bold">📊 Statistik Tamu</h4>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
         <a href="{{ route('tamus.index') }}">📖 Daftar Tamu</a>
         <a href="{{ route('tamus.statistik') }}" class="active">📊 Statistik</a>
         <a href="{{ url('/logout') }}">🚪 Logout</a>
     </div>
 
-    {{-- Main Content --}}
-    <div class="content">
-        <div class="navbar-custom d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-            <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">⬅️ Kembali</a>
-            <h4 class="m-0 text-center flex-grow-1 fw-bold">📊 Statistik Tamu</h4>
-        </div>
-
+    <!-- Main Content -->
+    <div class="content" id="main">
         {{-- Ringkasan total --}}
         <div class="row text-center mb-4">
             <div class="col-md-4 mb-3">
@@ -187,76 +193,99 @@
             <div class="tab-pane fade show active" id="keseluruhan" role="tabpanel">
                 <div class="card mb-4">
                     <div class="card-header bg-primary text-white">Jumlah Tamu per Hari</div>
-                    <div class="card-body">
+                    <div class="card-body chart-keseluruhan">
                         <canvas id="tamuPerHariChart"></canvas>
                     </div>
                 </div>
             </div>
 
-            {{-- Tab: Aktivitas --}}
+            {{-- Tab: Aktivitas (versi awal - tetap seperti semula) --}}
             <div class="tab-pane fade" id="aktivitas" role="tabpanel">
                 <div class="card mb-4">
                     <div class="card-header bg-success text-white">Jumlah Tamu per Aktivitas</div>
                     <div class="card-body">
-                        <canvas id="tamuPerAktivitasChart"></canvas>
+                        <canvas id="tamuPerAktivitasChart" style="max-height: 300px !important;"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-{{-- Script untuk grafik --}}
-<script>
-    const tamuPerHari = {!! json_encode($tamuPerHari) !!};
-    const tamuPerAktivitas = {!! json_encode($tamuPerAktivitas) !!};
+    {{-- Script Chart --}}
+    <script>
+        const tamuPerHari = {!! json_encode($tamuPerHari) !!};
+        const tamuPerAktivitas = {!! json_encode($tamuPerAktivitas) !!};
 
-    // Grafik per hari
-    new Chart(document.getElementById('tamuPerHariChart'), {
-        type: 'bar',
-        data: {
-            labels: tamuPerHari.map(item => item.tanggal),
-            datasets: [{
-                label: 'Jumlah Tamu',
-                data: tamuPerHari.map(item => item.jumlah),
-                backgroundColor: 'rgba(54, 162, 235, 0.7)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1,
-                borderRadius: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: { legend: { position: 'top' } },
-            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-        }
-    });
+        // Grafik per hari (dibesarkan)
+        new Chart(document.getElementById('tamuPerHariChart'), {
+            type: 'bar',
+            data: {
+                labels: tamuPerHari.map(item => item.tanggal),
+                datasets: [{
+                    label: 'Jumlah Tamu',
+                    data: tamuPerHari.map(item => item.jumlah),
+                    backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'top' } },
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+            }
+        });
 
-    // Grafik per aktivitas
-    new Chart(document.getElementById('tamuPerAktivitasChart'), {
-        type: 'pie',
-        data: {
-            labels: tamuPerAktivitas.map(item => item.aktivitas),
-            datasets: [{
-                label: 'Jumlah Tamu',
-                data: tamuPerAktivitas.map(item => item.jumlah),
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.7)',
-                    'rgba(75, 192, 192, 0.7)',
-                    'rgba(255, 206, 86, 0.7)',
-                    'rgba(153, 102, 255, 0.7)',
-                    'rgba(255, 159, 64, 0.7)',
-                ],
-                borderColor: 'rgba(255, 255, 255, 0.8)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: { legend: { position: 'right' } }
-        }
-    });
-</script>
+        // Grafik per aktivitas (asli, tidak diubah)
+        new Chart(document.getElementById('tamuPerAktivitasChart'), {
+            type: 'pie',
+            data: {
+                labels: tamuPerAktivitas.map(item => item.aktivitas),
+                datasets: [{
+                    label: 'Jumlah Tamu',
+                    data: tamuPerAktivitas.map(item => item.jumlah),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(255, 206, 86, 0.7)',
+                        'rgba(153, 102, 255, 0.7)',
+                        'rgba(255, 159, 64, 0.7)',
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 0.8)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'right' } }
+            }
+        });
+    </script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {{-- Script Sidebar --}}
+    <script>
+        const toggleBtn = document.getElementById('toggleBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const main = document.getElementById('main');
+
+        toggleBtn.addEventListener('click', () => {
+            if (window.innerWidth > 992) {
+                sidebar.classList.toggle('hidden');
+                main.classList.toggle('full');
+            } else {
+                sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
+            }
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
