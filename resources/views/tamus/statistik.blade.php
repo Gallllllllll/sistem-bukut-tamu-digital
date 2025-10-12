@@ -128,6 +128,7 @@
                 height: 350px;
             }
         }
+
     </style>
 </head>
 <body>
@@ -149,17 +150,7 @@
         <a href="{{ url('/logout') }}">🚪 Logout</a>
     </div>
 
-<<<<<<< Updated upstream
-    <!-- Main Content -->
-    <div class="content" id="main">
-=======
-    {{-- Main Content --}}
-    <div class="content">
-        <div class="navbar-custom d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-            <h4 class="m-0 text-center flex-grow-1 fw-bold">📊 Statistik Tamu</h4>
-        </div>
-
->>>>>>> Stashed changes
+     <div class="content" id="main">
         {{-- Ringkasan total --}}
         <div class="row text-center mb-4">
             <div class="col-md-4 mb-3">
@@ -181,6 +172,7 @@
                 </div>
             </div>
         </div>
+    </div>
 
         {{-- Tab Navigasi --}}
         <ul class="nav nav-tabs mb-4" id="statistikTabs" role="tablist">
@@ -295,6 +287,6 @@
         });
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
