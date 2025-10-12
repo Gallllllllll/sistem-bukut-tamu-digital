@@ -65,19 +65,41 @@ class TamuController extends Controller
     }
 
 
-
-
-
-
-    // Statistik jumlah tamu per hari
+    
+   // Statistik jumlah tamu per hari dan per aktivitas
     public function statistik()
     {
-        $tamuPerHari = Tamu::selectRaw('DATE(waktu_kedatangan) as tanggal, COUNT(*) as jumlah')
+        // Total keseluruhan
+        $totalTamu = \App\Models\Tamu::count();
+
+        // Total bulan ini
+        $totalBulanIni = \App\Models\Tamu::whereMonth('waktu_kedatangan', now()->month)->count();
+
+        // Total hari ini
+        $totalHariIni = \App\Models\Tamu::whereDate('waktu_kedatangan', now()->toDateString())->count();
+
+        // Data untuk grafik jumlah tamu per hari
+        $tamuPerHari = \App\Models\Tamu::selectRaw('DATE(waktu_kedatangan) as tanggal, COUNT(*) as jumlah')
             ->groupBy('tanggal')
+            ->orderBy('tanggal')
             ->get();
 
-        return view('tamus.statistik', compact('tamuPerHari'));
+        // Data untuk grafik jumlah tamu per aktivitas
+        // Pastikan kolom `aktivitas` ada di tabel tamu
+        $tamuPerAktivitas = \App\Models\Tamu::selectRaw('tujuan as aktivitas, COUNT(*) as jumlah')
+            ->groupBy('aktivitas')
+            ->orderBy('aktivitas')
+            ->get();
+
+        return view('tamus.statistik', compact(
+            'totalTamu',
+            'totalBulanIni',
+            'totalHariIni',
+            'tamuPerHari',
+            'tamuPerAktivitas'
+        ));
     }
+
 
     // Export Excel
     public function exportExcel()
