@@ -96,8 +96,11 @@
         }
 
         /* ===== CHART AREA ===== */
-        .chart-keseluruhan {
-            height: 500px; /* lebih besar dari biasanya */
+        .chart-keseluruhan canvas, #tamuPerAktivitasChart {
+            width: 100% !important;
+            height: 420px !important;
+            display: block;
+            margin: 0 auto;
         }
 
         canvas {
@@ -128,7 +131,6 @@
                 height: 350px;
             }
         }
-
     </style>
 </head>
 <body>
@@ -150,7 +152,8 @@
         <a href="{{ url('/logout') }}">🚪 Logout</a>
     </div>
 
-     <div class="content" id="main">
+    <!-- Main Content -->
+    <div class="content" id="main">
         {{-- Ringkasan total --}}
         <div class="row text-center mb-4">
             <div class="col-md-4 mb-3">
@@ -172,7 +175,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
         {{-- Tab Navigasi --}}
         <ul class="nav nav-tabs mb-4" id="statistikTabs" role="tablist">
@@ -194,8 +196,8 @@
             <div class="tab-pane fade show active" id="keseluruhan" role="tabpanel">
                 <div class="card mb-4">
                     <div class="card-header bg-primary text-white">Jumlah Tamu per Hari</div>
-                    <div class="card-body chart-keseluruhan">
-                        <canvas id="tamuPerHariChart"></canvas>
+                    <div class="card-body chart-keseluruhan" style="padding: 30px 20px;">
+                        <canvas id="tamuPerHariChart" style="width: 100%; height: 400px !important;"></canvas>
                     </div>
                 </div>
             </div>
@@ -287,6 +289,6 @@
         });
     </script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
