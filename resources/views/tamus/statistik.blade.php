@@ -149,8 +149,17 @@
         <a href="{{ url('/logout') }}">🚪 Logout</a>
     </div>
 
+<<<<<<< Updated upstream
     <!-- Main Content -->
     <div class="content" id="main">
+=======
+    {{-- Main Content --}}
+    <div class="content">
+        <div class="navbar-custom d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+            <h4 class="m-0 text-center flex-grow-1 fw-bold">📊 Statistik Tamu</h4>
+        </div>
+
+>>>>>>> Stashed changes
         {{-- Ringkasan total --}}
         <div class="row text-center mb-4">
             <div class="col-md-4 mb-3">

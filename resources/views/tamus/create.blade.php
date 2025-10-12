@@ -51,15 +51,24 @@
             position: absolute;
             top: 20px;
             right: 25px;
-            background-color: #a20a0a;
             color: white;
             border: 1pt;
             border-radius: 10px;
             border-color: white;
         }
         .top-right:hover {
-            background-color:#223a59;
             color: white;
+        }
+        .btn-danger{
+            background-color: #a20a0a;
+        }
+        .btn-danger:hover{            
+            background-color:#223a59;
+            border-color: #223a59;
+        }
+        .btn-success:hover{            
+            background-color:#223a59;
+            border-color: #223a59;
         }     
 
         @media (max-width: 768px) {
@@ -72,17 +81,21 @@
 <body>
 
     <!-- 🔐 Tombol Login di pojok kiri atas -->
-    <div class="top-right">
+    <div class="top-right d-flex gap-2 p-2">
         @guest
-            <a href="{{ route('login') }}" class="btn btn-sm">
+            <a href="{{ route('login') }}" class="btn btn-outline-light btn-sm">
                 🔐 Login Administrator
             </a>
         @else
-            <a href="{{ url('/logout') }}" class="btn btn-danger btn-sm">
+            <a href="{{ route('tamus.index') }}" class="btn btn-success btn-sm">
+                📋 Dashboard Admin
+            </a>
+            <a href="{{ route('logout') }}" class="btn btn-danger btn-sm">
                 🚪 Logout
             </a>
         @endguest
     </div>
+
 
     <div class="container py-5">
         <!-- 🏷️ Tulisan Selamat Datang -->
