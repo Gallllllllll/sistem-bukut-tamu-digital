@@ -181,13 +181,21 @@
                             <td>{{ $tamu->instansi }}</td>
                             <td>{{ $tamu->tujuan }}</td>
                             <td>{{ $tamu->created_at->format('d M Y H:i') }}</td>
+
+                            
                             <td>
-                                <form action="{{ route('tamus.destroy', $tamu->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                               
+                                <a href="{{ route('tamus.edit', $tamu->id) }}" class="btn btn-warning btn-sm">Update</a>
+
+                                <form action="{{ route('tamus.destroy', $tamu->id) }}" method="POST" style="display:inline;"
+                                    onsubmit="return confirm('Apakah kamu yakin ingin menghapus data ini?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">🗑️ Hapus</button>
+                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                 </form>
+
                             </td>
+
                         </tr>
                         @endforeach
                     </tbody>
@@ -209,6 +217,7 @@
                 main.classList.toggle('full');
             } else {
                 // Mobile mode
+                
                 sidebar.classList.toggle('show');
                 overlay.classList.toggle('show');
             }
