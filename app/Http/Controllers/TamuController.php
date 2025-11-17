@@ -10,9 +10,6 @@ use PDF;
 use Barryvdh\DomPDF\Facade\Pdf as DomPdf;
 use Carbon\Carbon;
 
-
-
-
 class TamuController extends Controller
 {
     // Menampilkan daftar tamu + pencarian
@@ -61,40 +58,34 @@ class TamuController extends Controller
     }
 
     // Statistik jumlah tamu per hari dan per aktivitas
-   public function statistik()
-{
-    // Ambil total tamu
-    $totalTamu = Tamu::count();
-    $totalBulanIni = Tamu::whereMonth('waktu_kedatangan', now()->month)->count();
-    $totalHariIni = Tamu::whereDate('waktu_kedatangan', now()->toDateString())->count();
+    public function statistik()
+    {
+        $totalTamu = Tamu::count();
+        $totalBulanIni = Tamu::whereMonth('waktu_kedatangan', now()->month)->count();
+        $totalHariIni = Tamu::whereDate('waktu_kedatangan', now()->toDateString())->count();
 
-    // Ambil tamu per hari dan pastikan tanggalnya sesuai
-   $tamuPerHari = Tamu::selectRaw('DATE(waktu_kedatangan) as tanggal, COUNT(*) as jumlah')
-    ->groupBy('tanggal')
-    ->orderBy('tanggal', 'desc') // Urutkan berdasarkan tanggal terbaru
-    ->get()
-    ->map(function ($item) {
-        // Pastikan tanggal dalam format YYYY-MM-DD
-        $item->tanggal = Carbon::parse($item->tanggal)->format('Y-m-d');
-        return $item;
-    });
+        $tamuPerHari = Tamu::selectRaw('DATE(waktu_kedatangan) as tanggal, COUNT(*) as jumlah')
+            ->groupBy('tanggal')
+            ->orderBy('tanggal', 'desc')
+            ->get()
+            ->map(function ($item) {
+                $item->tanggal = Carbon::parse($item->tanggal)->format('Y-m-d');
+                return $item;
+            });
 
+        $tamuPerAktivitas = Tamu::selectRaw('tujuan as aktivitas, COUNT(*) as jumlah')
+            ->groupBy('aktivitas')
+            ->orderBy('aktivitas')
+            ->get();
 
-    // Ambil tamu per aktivitas
-    $tamuPerAktivitas = Tamu::selectRaw('tujuan as aktivitas, COUNT(*) as jumlah')
-        ->groupBy('aktivitas')
-        ->orderBy('aktivitas')
-        ->get();
-
-    return view('tamus.statistik', compact(
-        'totalTamu',
-        'totalBulanIni',
-        'totalHariIni',
-        'tamuPerHari',
-        'tamuPerAktivitas'
-    ));
-}
-
+        return view('tamus.statistik', compact(
+            'totalTamu',
+            'totalBulanIni',
+            'totalHariIni',
+            'tamuPerHari',
+            'tamuPerAktivitas'
+        ));
+    }
 
     // Export Excel
     public function exportExcel()
@@ -109,30 +100,23 @@ class TamuController extends Controller
         $pdf = PDF::loadView('tamus.pdf', compact('tamus'));
         return $pdf->download('tamu.pdf');
     }
-    // export statistk
-    
 
-public function exportStatistik()
-{
-    $data = \App\Models\Tamu::selectRaw('tanggal, COUNT(id) as jumlah')
-                ->groupBy('tanggal')
-                ->orderBy('tanggal')
-                ->get();
+    // Export Statistik
+    public function exportStatistik()
+    {
+        $data = \App\Models\Tamu::selectRaw('DATE(waktu_kedatangan) as tanggal, COUNT(*) as jumlah')
+            ->groupBy('tanggal')
+            ->orderBy('tanggal')
+            ->get();
 
-    $terakhir = \App\Models\Tamu::orderBy('tanggal', 'desc')->first()->tanggal ?? now()->toDateString();
+        $terakhir = \App\Models\Tamu::orderBy('waktu_kedatangan', 'desc')->first()->waktu_kedatangan ?? now()->toDateString();
 
-    $pdf = Pdf::loadView('tamus.pdf_statistik', compact('data', 'terakhir'));
+        $pdf = DomPdf::loadView('tamus.pdf_statistik', compact('data', 'terakhir'));
 
-    return $pdf->download('statistik_tamu.pdf');
-}
+        return $pdf->download('statistik_tamu.pdf');
+    }
 
-
-     
-
-
-
-
-    // 🆕 Tambahkan fungsi Edit dan Update di bawah ini
+    // Edit dan Update untuk tamu
     public function edit($id)
     {
         $tamu = Tamu::findOrFail($id);

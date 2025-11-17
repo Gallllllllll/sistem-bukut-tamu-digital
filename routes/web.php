@@ -24,8 +24,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tamus/export-pdf', [TamuController::class, 'exportPDF'])->name('tamus.exportPDF');
     Route::get('/tamus/statistik', [TamuController::class, 'statistik'])->name('tamus.statistik');
     //Route::get('/tamus/export-statistik-pdf', [TamuController::class, 'exportStatistikPdf'])->name('tamus.export-statistik-pdf');
-Route::get('/tamus/export-statistik', [App\Http\Controllers\TamuController::class, 'exportStatistik'])
-    ->name('tamus.exportStatistik');
+    //Route::get('/tamus/export-statistik', [App\Http\Controllers\TamuController::class, 'exportStatistik'])->name('tamus.exportStatistik');
+    Route::get('/tamus/export/statistik', [TamuController::class, 'exportStatistik'])->name('tamus.exportStatistik');
+    Route::get('/export-statistik', [TamuController::class, 'exportStatistik'])->name('tamus.exportStatistik');
+
 
     Route::delete('/tamus/{id}', [TamuController::class, 'destroy'])->name('tamus.destroy');
 });
