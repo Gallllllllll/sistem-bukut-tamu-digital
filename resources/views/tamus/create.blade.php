@@ -86,6 +86,10 @@
             <a href="{{ route('login') }}" class="btn btn-outline-light btn-sm">
                 🔐 Login Administrator
             </a>
+            <!-- Tombol untuk registrasi dan login -->
+            <a href="{{ route('register') }}" class="btn btn-primary">Daftar Akun</a>
+            <a href="{{ route('login') }}" class="btn btn-secondary">Login</a>
+
         @else
             <a href="{{ route('tamus.index') }}" class="btn btn-success btn-sm">
                 📋 Dashboard Admin
@@ -178,7 +182,18 @@
     @if(session('success'))
         document.querySelector('form').reset();
     @endif
+
+   
+
+
+
+
 </script>
+
+<!-- resources/views/home.blade.php -->
+
+
+
 
 </body>
 </html>

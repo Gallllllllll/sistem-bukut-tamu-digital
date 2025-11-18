@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TamuController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Auth\RegisteredUserController;
+
 
 
 // ===== HALAMAN UTAMA & LOGIN =====
@@ -40,3 +42,18 @@ Route::post('/tamus', [TamuController::class, 'store'])->name('tamus.store');
 
 Route::get('/tamus/edit/{id}', [TamuController::class, 'edit'])->name('tamus.edit');
 Route::post('/tamus/update/{id}', [TamuController::class, 'update'])->name('tamus.update');
+
+// Menampilkan halaman login
+Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
+Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+
+// Menampilkan halaman registrasi
+Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
+Route::post('/register', [RegisteredUserController::class, 'store'])->name('register');
+
+Route::get('/dashboard', function () {return view('dashboard');})->middleware('auth');
+Route::get('/home', function () {
+ return view('home');  // Bisa disesuaikan dengan halaman yang ingin Anda tunjukkan
+})->name('home');
+
+
