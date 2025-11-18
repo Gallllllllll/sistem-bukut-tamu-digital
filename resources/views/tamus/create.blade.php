@@ -83,7 +83,7 @@
     <!-- 🔐 Tombol Login di pojok kiri atas -->
     <div class="top-right d-flex gap-2 p-2">
         @guest
-            <a href="{{ route('login') }}" class="btn btn-outline-light btn-sm">
+            <a href="{{ route('login-admin') }}" class="btn btn-outline-light btn-sm">
                 🔐 Login Administrator
             </a>
             <!-- Tombol untuk registrasi dan login -->

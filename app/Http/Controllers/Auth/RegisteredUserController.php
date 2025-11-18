@@ -10,30 +10,28 @@ use Illuminate\Support\Facades\Validator;
 
 class RegisteredUserController extends Controller
 {
-    // Menampilkan form registrasi
-    public function create()
-    {
+    public function index() {
         return view('tamus.register');
     }
+    // Menampilkan form registrasi
+   public function store(Request $request)
+{
+    $request->validate([
+        'username' => 'required|unique:users',
+        'name' => 'required',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|confirmed',
+    ]);
 
-    // Menyimpan pengguna baru
-    public function store(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+    // Create the user
+    $user = User::create([
+        'username' => $request->username,
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => bcrypt($request->password),
+    ]);
 
-        // Menyimpan pengguna baru
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        // Redirect ke halaman utama setelah registrasi berhasil
-        return redirect()->route('create')->with('success', 'Akun berhasil dibuat!');
-    }
+    // Redirect to a different page (e.g., homepage)
+    return redirect()->route('home')->with('success', 'Registration successful!');
+}
 }

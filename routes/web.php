@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TamuController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+
 
 
 
@@ -11,10 +13,10 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 Route::middleware(['web'])->group(function () {
     // Halaman utama langsung ke form tamu (bukan login)
     Route::get('/', [TamuController::class, 'create'])->name('home');
-
+    
     // Login admin
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/login-admin', [AuthController::class, 'showLogin'])->name('login-admin');
+    Route::post('/login-admin', [AuthController::class, 'login']);
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 });
@@ -48,12 +50,23 @@ Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('l
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 
 // Menampilkan halaman registrasi
-Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
-Route::post('/register', [RegisteredUserController::class, 'store'])->name('register');
+
 
 Route::get('/dashboard', function () {return view('dashboard');})->middleware('auth');
-Route::get('/home', function () {
- return view('home');  // Bisa disesuaikan dengan halaman yang ingin Anda tunjukkan
-})->name('home');
 
 
+
+Route::get('/register', [RegisteredUserController::class, 'index'])->name('register');
+Route::post('/register', [RegisteredUserController::class, 'store']); // Menyimpan data dan redirect ke halaman create
+Route::get('/create', [SomeController::class, 'create'])->name('create'); // Ganti dengan controller yang sesuai
+
+
+
+// Route to show login form
+Route::get('/loginuser', [AuthenticatedSessionController::class, 'create'])->name('loginuser');
+
+// Route to handle login form submission
+Route::post('/loginuser', [AuthenticatedSessionController::class, 'store']);
+
+// Route to logout
+Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
